@@ -5,6 +5,8 @@
 # Usage: state.sh <fn> [args...]
 #   fn: state_assert_phase <expected>
 #       state_set_phase <new_phase>
+#       state_record_test <file> <name> <status>
+#       state_clear
 #
 # Environment:
 #   SPEAR_STATE_FILE  — path to state JSON (default: .claude/spear-state.json)
@@ -38,6 +40,30 @@ cmd_state_set_phase() {
   mv "${STATE_FILE}.tmp" "$STATE_FILE"
 }
 
+cmd_state_record_test() {
+  local file="$1"
+  local name="$2"
+  local status="$3"
+  mkdir -p "$(dirname "$STATE_FILE")"
+  local existing="{}"
+  [ -f "$STATE_FILE" ] && existing=$(cat "$STATE_FILE")
+  local now
+  now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  echo "$existing" \
+    | jq --arg f "$file" --arg n "$name" --arg s "$status" --arg t "$now" \
+        '. + {version: 1, testFile: $f, testName: $n, testStatus: $s, lastUpdated: $t}' \
+    > "${STATE_FILE}.tmp"
+  mv "${STATE_FILE}.tmp" "$STATE_FILE"
+}
+
+cmd_state_clear() {
+  mkdir -p "$(dirname "$STATE_FILE")"
+  local now
+  now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  jq -n --arg t "$now" '{version: 1, phase: "idle", lastUpdated: $t}' > "${STATE_FILE}.tmp"
+  mv "${STATE_FILE}.tmp" "$STATE_FILE"
+}
+
 main() {
   if [ $# -lt 1 ]; then
     echo "state.sh: missing fn" >&2
@@ -47,6 +73,8 @@ main() {
   case "$fn" in
     state_assert_phase) cmd_state_assert_phase "$@" ;;
     state_set_phase)    cmd_state_set_phase "$@" ;;
+    state_record_test)  cmd_state_record_test "$@" ;;
+    state_clear)        cmd_state_clear "$@" ;;
     *) echo "state.sh: unknown fn: $fn" >&2; exit 2 ;;
   esac
 }
