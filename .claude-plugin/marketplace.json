@@ -1,0 +1,20 @@
+{
+  "name": "BadgersMC-spear-plugin",
+  "description": "SPEAR — Spec-Proven Engineering with Architectural Requirements. Hybrid SDD/TDD/Hexagonal methodology as a Claude Code plugin.",
+  "owner": {
+    "name": "BadgersMC",
+    "email": "thegeekedgamer@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "spear",
+      "description": "SPEAR methodology plugin: scaffolding, EARS validation, TDD red/green gates, layer enforcement.",
+      "version": "0.1.0",
+      "source": "./plugins/spear",
+      "author": {
+        "name": "BadgersMC",
+        "email": "thegeekedgamer@gmail.com"
+      }
+    }
+  ]
+}
