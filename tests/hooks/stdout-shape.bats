@@ -20,6 +20,16 @@ run_claude_hook() {
   CLAUDE_PLUGIN_ROOT=/fake CURSOR_PLUGIN_ROOT= run bash "$HOOK_BIN"
 }
 
+# ── Helper: run hook in Cursor mode (both roots set) ──────────────────────────
+run_cursor_hook_both_set() {
+  CLAUDE_PLUGIN_ROOT=/fake CURSOR_PLUGIN_ROOT=/fake run bash "$HOOK_BIN"
+}
+
+# ── Helper: run hook in Cursor mode (only Cursor root set) ──────────────────
+run_cursor_hook_only() {
+  CLAUDE_PLUGIN_ROOT= CURSOR_PLUGIN_ROOT=/fake run bash "$HOOK_BIN"
+}
+
 # ── Tests ────────────────────────────────────────────────────────────────────
 
 @test "Claude Code branch: exits 0" {
@@ -88,4 +98,117 @@ run_claude_hook() {
   [ "$status" -eq 0 ]
 
   echo "$output" | jq -e '.additional_context == null'
+}
+
+# ── Cursor branch tests (REQ-083, TDD-16) ────────────────────────────────────
+
+@test "Cursor branch (both roots set): exits 0" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+}
+
+@test "Cursor branch (both roots set): emits additional_context only" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+
+  # Must be valid JSON
+  echo "$output" | jq . > /dev/null
+
+  # additional_context must be non-empty
+  echo "$output" | jq -e '.additional_context | length > 0'
+
+  # Must NOT have hookSpecificOutput key anywhere
+  echo "$output" | jq -e 'has("hookSpecificOutput") | not'
+}
+
+@test "Cursor branch (both roots set): additional_context includes SPEAR" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+
+  ctx=$(echo "$output" | jq -r '.additional_context')
+  [[ "$ctx" == *"SPEAR"* ]]
+}
+
+@test "Cursor branch (only Cursor root set): exits 0" {
+  run_cursor_hook_only
+  [ "$status" -eq 0 ]
+}
+
+@test "Cursor branch (only Cursor root set): emits additional_context only" {
+  run_cursor_hook_only
+  [ "$status" -eq 0 ]
+
+  # Must be valid JSON
+  echo "$output" | jq . > /dev/null
+
+  # additional_context must be non-empty
+  echo "$output" | jq -e '.additional_context | length > 0'
+
+  # Must NOT have hookSpecificOutput key anywhere
+  echo "$output" | jq -e 'has("hookSpecificOutput") | not'
+}
+
+@test "Cursor branch (only Cursor root set): additional_context includes SPEAR" {
+  run_cursor_hook_only
+  [ "$status" -eq 0 ]
+
+  ctx=$(echo "$output" | jq -r '.additional_context')
+  [[ "$ctx" == *"SPEAR"* ]]
+}
+
+@test "Cursor branch (both roots set): output is valid JSON" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+
+  echo "$output" | jq . > /dev/null
+  [ $? -eq 0 ]
+}
+
+@test "Cursor branch (only Cursor root set): output is valid JSON" {
+  run_cursor_hook_only
+  [ "$status" -eq 0 ]
+
+  echo "$output" | jq . > /dev/null
+  [ $? -eq 0 ]
+}
+
+# ── Rigor tests (additional coverage for TDD-16) ─────────────────────────────
+
+@test "Cursor branch (both roots set): is single-key object with additional_context" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+
+  # The root object must have exactly one key: "additional_context"
+  key_count=$(echo "$output" | jq 'keys | length')
+  [ "$key_count" -eq 1 ]
+
+  # That key must be "additional_context"
+  has_key=$(echo "$output" | jq 'has("additional_context")')
+  [ "$has_key" = "true" ]
+}
+
+@test "Cursor branch (both roots set): additional_context contains SPEAR cycle phrase" {
+  run_cursor_hook_both_set
+  [ "$status" -eq 0 ]
+
+  ctx=$(echo "$output" | jq -r '.additional_context')
+  # Must contain all five SPEAR cycle steps in some order (greedy pattern)
+  [[ "$ctx" =~ SPEC ]]
+  [[ "$ctx" =~ PROVE ]]
+  [[ "$ctx" =~ ENGINE ]]
+  [[ "$ctx" =~ ARCH ]]
+  [[ "$ctx" =~ REFINE ]]
+}
+
+@test "Cursor branch (only Cursor root set): is single-key object with additional_context" {
+  run_cursor_hook_only
+  [ "$status" -eq 0 ]
+
+  # The root object must have exactly one key: "additional_context"
+  key_count=$(echo "$output" | jq 'keys | length')
+  [ "$key_count" -eq 1 ]
+
+  # That key must be "additional_context"
+  has_key=$(echo "$output" | jq 'has("additional_context")')
+  [ "$has_key" = "true" ]
 }
