@@ -1,0 +1,14 @@
+{
+  "name": "spear",
+  "version": "0.1.0",
+  "description": "SPEAR methodology — Spec-Proven Engineering with Architectural Requirements.",
+  "author": {
+    "name": "BadgersMC",
+    "email": "thegeekedgamer@gmail.com"
+  },
+  "homepage": "https://github.com/BadgersMC/spear-plugin",
+  "repository": "https://github.com/BadgersMC/spear-plugin",
+  "license": "MIT",
+  "keywords": ["spear", "tdd", "ears", "hexagonal", "methodology"],
+  "hooks": "./hooks/hooks.json"
+}
