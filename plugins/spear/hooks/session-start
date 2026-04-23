@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# plugins/spear/hooks/session-start — SPEAR SessionStart hook.
+#
+# Registered in hooks/hooks.json for matcher "startup|clear|compact".
+# Invoked by Claude Code at the start of every session.
+#
+# REQ-080  Hook registered for SessionStart.
+# REQ-082  Claude Code JSON output shape.
+# REQ-084  No-op (with notice) outside SPEAR projects.
+# REQ-085  Never exits non-zero.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=lib/detect.sh
+source "${SCRIPT_DIR}/lib/detect.sh"
+
+# ── Detection (REQ-084) ──────────────────────────────────────────────────────
+if ! is_spear_project "$PWD"; then
+  echo "SPEAR plugin: not a SPEAR project (docs/requirements.md or docs/tasks.md missing); no-op"
+  exit 0
+fi
+
+# ── SPEAR project detected — emit stub payload (REQ-082) ────────────────────
+# Shape is the Claude Code hookSpecificOutput envelope.
+# Task 2.2/2.3 will replace this stub with full context injection.
+printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"SPEAR project detected"}}\n'
+exit 0
