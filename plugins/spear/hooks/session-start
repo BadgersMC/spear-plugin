@@ -3,7 +3,7 @@
 # plugins/spear/hooks/session-start — SPEAR SessionStart hook.
 #
 # Registered in hooks/hooks.json for matcher "startup|clear|compact".
-# Invoked by Claude Code at the start of every session.
+# Invoked by Claude Code (or Cursor) at the start of every session.
 #
 # REQ-080  Hook registered for SessionStart.
 # REQ-082  Claude Code JSON output shape.
@@ -16,6 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck source=lib/detect.sh
 source "${SCRIPT_DIR}/lib/detect.sh"
+# shellcheck source=lib/payload.sh
+source "${SCRIPT_DIR}/lib/payload.sh"
 
 # ── Detection (REQ-084) ──────────────────────────────────────────────────────
 if ! is_spear_project "$PWD"; then
@@ -23,8 +25,38 @@ if ! is_spear_project "$PWD"; then
   exit 0
 fi
 
-# ── SPEAR project detected — emit stub payload (REQ-082) ────────────────────
-# Shape is the Claude Code hookSpecificOutput envelope.
-# Task 2.2/2.3 will replace this stub with full context injection.
-printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"SPEAR project detected"}}\n'
+# ── Escape string for JSON embedding (bash parameter substitution).
+# Each ${s//old/new} is a single C-level pass — avoids the character loop.
+# Uses printf, NOT heredoc (bash 5.3+ heredoc bug with large strings).
+# Reference: superpowers/5.0.4/hooks/session-start
+escape_for_json() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
+}
+
+# ── Build payload (REQ-082) ──────────────────────────────────────────────────
+payload_text="$(build_payload)"
+payload_escaped="$(escape_for_json "$payload_text")"
+
+# ── Emit JSON envelope ───────────────────────────────────────────────────────
+# Cursor sets CURSOR_PLUGIN_ROOT (may also set CLAUDE_PLUGIN_ROOT) — check it first.
+# Claude Code sets only CLAUDE_PLUGIN_ROOT.
+# Emit ONLY the field consumed by the current platform to avoid double injection.
+# Uses printf NOT heredoc (bash 5.3+ bug — see escape_for_json note above).
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  # Cursor branch — TDD-16 will implement this fully.
+  printf '{"additional_context":"%s"}\n' "$payload_escaped"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  # Claude Code branch (REQ-082)
+  printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$payload_escaped"
+else
+  # Fallback — emit Claude Code shape so the hook is always useful.
+  printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$payload_escaped"
+fi
+
 exit 0
