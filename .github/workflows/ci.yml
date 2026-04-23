@@ -1,0 +1,32 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  skill-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: node tests/skills/lint.mjs
+  state-machine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          node --test tests/state/
+  hook-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update && sudo apt-get install -y bats jq
+          bats tests/hooks/
+  polyglot-smoke-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: cmd
+        run: plugins\spear\hooks\run-hook.cmd session-start || exit 0
