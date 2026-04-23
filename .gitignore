@@ -1,4 +1,16 @@
+# SPEAR per-project state — never committed
 .claude/spear-state.json
+
+# Node tooling
 node_modules/
-*.log
+npm-debug.log*
+
+# Bats
+.bats-tmp/
+
+# OS / editor noise
 .DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
