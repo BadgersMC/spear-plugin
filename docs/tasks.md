@@ -18,43 +18,43 @@ Goal: reach the point where the four docs in this very directory can be regenera
 
 ### INFRA tasks
 
-- [ ] **INFRA-01** — Add `.gitignore`
+- [x] **INFRA-01** — Add `.gitignore`
   References: REQ-040
   Tag: INFRA
   Description: Add `.gitignore` covering `.claude/spear-state.json`, `node_modules/`, `.bats-tmp/`, OS noise.
   Evidence: ` `
 
-- [ ] **INFRA-02** — Capture pinned schema snapshots
+- [x] **INFRA-02** — Capture pinned schema snapshots
   References: REQ-001, REQ-002, REQ-080, design §3, §9; tech-stack §3
   Tag: INFRA
   Description: Write `docs/refs/marketplace-schema.md`, `docs/refs/plugin-schema.md`, `docs/refs/hook-schema.md` with field tables copied from context7 `/websites/code_claude_en_plugins-reference`. These are read by reviewers and by future me when Claude Code releases break things.
   Evidence: ` `
 
-- [ ] **INFRA-03** — Author `marketplace.json`
+- [x] **INFRA-03** — Author `marketplace.json`
   References: REQ-001, REQ-003; design §3.1
   Tag: INFRA
   Description: Create `.claude-plugin/marketplace.json` with `name: BadgersMC-spear-plugin`, owner block, one plugin entry pointing to `./plugins/spear`.
   Evidence: ` `
 
-- [ ] **INFRA-04** — Author `plugin.json`
+- [x] **INFRA-04** — Author `plugin.json`
   References: REQ-002; design §3.1; impl §3.2
   Tag: INFRA
   Description: Create `plugins/spear/.claude-plugin/plugin.json` with required + metadata fields, hooks pointer.
   Evidence: ` `
 
-- [ ] **INFRA-05** — Author `hooks/hooks.json`
+- [x] **INFRA-05** — Author `hooks/hooks.json`
   References: REQ-080, REQ-081; impl §3.3
   Tag: INFRA
   Description: Create `plugins/spear/hooks/hooks.json` registering `SessionStart` matcher `startup|clear|compact` invoking `run-hook.cmd session-start`. Mirror superpowers exactly.
   Evidence: ` `
 
-- [ ] **INFRA-06** — Port polyglot `run-hook.cmd`
+- [x] **INFRA-06** — Port polyglot `run-hook.cmd`
   References: REQ-081; tech-stack §5; impl §3.4
   Tag: INFRA
   Description: Copy superpowers polyglot wrapper, retarget paths/comments. Verify both cmd.exe and bash interpret it correctly.
   Evidence: ` `
 
-- [ ] **INFRA-07** — CI workflow skeleton
+- [x] **INFRA-07** — CI workflow skeleton
   References: REQ-100..REQ-103; tech-stack §7
   Tag: INFRA
   Description: Create `.github/workflows/ci.yml` running skill-lint, state-machine tests, hook integration tests on Ubuntu, polyglot smoke on Windows.
@@ -62,19 +62,19 @@ Goal: reach the point where the four docs in this very directory can be regenera
 
 ### TDD tasks (state machine + hook + lint)
 
-- [ ] **TDD-10** — State helpers: `state_assert_phase` linear gating
+- [x] **TDD-10** — State helpers: `state_assert_phase` linear gating
   References: REQ-042, REQ-043, REQ-044, REQ-045; impl §3.6
   Tag: TDD
   Description: Failing Node test in `tests/state/state-machine.test.mjs` driving `hooks/lib/state.sh state_assert_phase` across every legal + illegal predecessor. Implement `state.sh` in bash backed by `jq`. Acceptance: every illegal transition emits the REQ-043 message and exits 1; every legal transition exits 0.
   Evidence: ` `
 
-- [ ] **TDD-11** — State helpers: `state_set_phase` atomic write
+- [x] **TDD-11** — State helpers: `state_set_phase` atomic write
   References: REQ-040, REQ-041, REQ-042
   Tag: TDD
   Description: Failing Node test asserting concurrent writers cannot produce partial JSON; assert `version: 1` always present after write. Implement via `tmp + mv` rename. Worker: Haiku.
   Evidence: ` `
 
-- [ ] **TDD-12** — State helpers: `state_record_test` + `state_clear`
+- [x] **TDD-12** — State helpers: `state_record_test` + `state_clear`
   References: REQ-046, REQ-047, REQ-048
   Tag: TDD
   Description: Failing tests asserting `state_record_test` writes `testFile`/`testName`/`testStatus`, and `state_clear` returns to a JSON deep-equal of `{"version":1,"phase":"idle"}`. Worker: Haiku.
