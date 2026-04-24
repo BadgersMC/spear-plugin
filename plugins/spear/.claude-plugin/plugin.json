@@ -9,6 +9,5 @@
   "homepage": "https://github.com/BadgersMC/spear-plugin",
   "repository": "https://github.com/BadgersMC/spear-plugin",
   "license": "MIT",
-  "keywords": ["spear", "tdd", "ears", "hexagonal", "methodology"],
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["spear", "tdd", "ears", "hexagonal", "methodology"]
 }
