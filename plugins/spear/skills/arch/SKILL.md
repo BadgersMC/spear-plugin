@@ -95,5 +95,4 @@ DOC / INFRA path: `spec-done → [spear:arch] → arch-done → spear:refine`.
 
 - `docs/requirements.md` REQ-031, REQ-032, REQ-060, REQ-061, REQ-062, REQ-063, REQ-064, REQ-065, REQ-067
 - `docs/implementation.md` §2 Layer Dependency Rules, `## Forbidden Domain Annotations`, §3.6 state helpers
-- `docs/design/2026-04-23-spear-plugin-design.md` §6 Architectural Enforcement
 - `plugins/spear/hooks/lib/state.sh`

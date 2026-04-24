@@ -15,15 +15,7 @@ DOC and INFRA tasks skip this skill entirely — they flow `spec-done → arch` 
 
 ### Step 1 — Assert predecessor phase (REQ-043)
 
-Shell out to `${CLAUDE_PLUGIN_ROOT}/hooks/lib/state.sh state_assert_phase prove-done`.
-
-If the command exits non-zero it will print:
-
-```
-spear:engine requires phase=prove-done; current phase=<actual>
-```
-
-Stop immediately and surface that message to the user. Do NOT proceed.
+Shell out to `${CLAUDE_PLUGIN_ROOT}/hooks/lib/state.sh state_assert_phase prove-done`. On non-zero exit, surface the printed message and stop — do NOT proceed.
 
 ### Step 2 — Set phase to `engine`
 

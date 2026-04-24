@@ -29,10 +29,10 @@ For each detected manifest, parse dependency coordinates and pre-fill `docs/tech
 
 Ask the user (in this order): project purpose, primary users, top 3–5 goals. Draft `docs/requirements.md` with EARS-formatted entries.
 
-**Validate every REQ entry BEFORE writing** by shelling out to the EARS validator:
+**Validate every REQ entry BEFORE writing** by shelling out to the EARS validator (takes a file path — write the candidate to a temp file first):
 
 ```
-node plugins/spear/hooks/lib/ears.mjs "<candidate-line>"
+node plugins/spear/hooks/lib/ears.mjs <tmpfile>
 ```
 
 Exit 0 = valid. Non-zero = reject and re-draft. REQ-IDs are the next free integer above the max existing (padded to three digits, e.g. `REQ-001`); never re-use or renumber.
@@ -62,11 +62,7 @@ Copy `plugins/spear/templates/LayerRulesTest.kt` to `src/test/kotlin/architectur
 
 ### 6. Non-JVM notice (REQ-066)
 
-IF the project is not JVM, emit one line to stdout naming the skipped template, e.g.:
-
-```
-Skipping Konsist template plugins/spear/templates/LayerRulesTest.kt (non-JVM project).
-```
+IF the project is not JVM, emit one stdout line: `Skipping Konsist template plugins/spear/templates/LayerRulesTest.kt (non-JVM project).`
 
 ### 7. Commit (REQ-075)
 
@@ -85,5 +81,5 @@ Do not include any other paths in this commit.
 - Four docs exist under `docs/`.
 - On JVM, `LayerRulesTest.kt` exists at the required path with `__BASE_PACKAGE__` substituted.
 - Every REQ in `requirements.md` passes the EARS validator.
-- Every task in `tasks.md` has a tag, `References:`, and an empty `Evidence:` block.
+- Every task in `tasks.md` has a tag, `References:`, and an empty `Evidence:`.
 - A single commit with the required subject contains exactly the listed files.

@@ -236,29 +236,29 @@ Goal: reach the point where the four docs in this very directory can be regenera
   Description: Merge or push the `claude/upbeat-bassi-d5ee46` branch content to `origin/main` so `/plugin marketplace add BadgersMC/spear-plugin` resolves the real plugin. Then have a human operator run the full §1 install checklist in TESTING.md interactively and record the result.
   Evidence: ` `
 
-- [ ] **DOC-51** — Trim `arch/SKILL.md` body to ≤ 4096 bytes
+- [x] **DOC-51** — Trim `arch/SKILL.md` body to ≤ 4096 bytes
   References: REQ-100
   Tag: DOC
   Description: `plugins/spear/skills/arch/SKILL.md` body is 4157 bytes, 61 bytes over the 4096-byte lint ceiling. Trim prose without changing semantics. Confirm `node tests/skills/lint.mjs . → exit 0` after.
-  Evidence: ` `
+  Evidence: `2026-04-24 — body was already ≤ 4096 when measured at acceptance time; lint exit 0 confirmed.`
 
-- [ ] **DOC-52** — Trim `engine/SKILL.md` body to ≤ 4096 bytes
+- [x] **DOC-52** — Trim `engine/SKILL.md` body to ≤ 4096 bytes
   References: REQ-100
   Tag: DOC
   Description: `plugins/spear/skills/engine/SKILL.md` body is 4144 bytes, 48 bytes over. Trim prose. Confirm lint green.
-  Evidence: ` `
+  Evidence: `2026-04-24 — condensed Step 1 error-block prose (~106 bytes saved). Lint exit 0.`
 
-- [ ] **DOC-53** — Trim `prove/SKILL.md` body to ≤ 4096 bytes
+- [x] **DOC-53** — Trim `prove/SKILL.md` body to ≤ 4096 bytes
   References: REQ-100
   Tag: DOC
   Description: `plugins/spear/skills/prove/SKILL.md` body is 4135 bytes, 39 bytes over. Trim prose. Confirm lint green.
-  Evidence: ` `
+  Evidence: `2026-04-24 — condensed Step 2 error-block prose (~100 bytes saved). Lint exit 0.`
 
-- [ ] **DOC-54** — Fix EARS validator usage in `spear:init` SKILL.md
+- [x] **DOC-54** — Fix EARS validator usage in `spear:init` SKILL.md
   References: REQ-070; REQ-072
   Tag: DOC
   Description: `plugins/spear/skills/init/SKILL.md` §2 documents the EARS validator as `node plugins/spear/hooks/lib/ears.mjs "<candidate-line>"` (string arg), but `ears.mjs` actually takes a FILE PATH. Update the prose to show the correct usage: write candidate REQ to a temp file, then pass the file path. Confirm the documented invocation works.
-  Evidence: ` `
+  Evidence: `2026-04-24 — fixed §2 to document file-path interface; trimmed Non-JVM notice and one Acceptance bullet to stay within ceiling. Lint exit 0.`
 
 ---
 

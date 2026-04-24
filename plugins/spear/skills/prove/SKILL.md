@@ -27,15 +27,7 @@ Stop immediately. Do NOT mutate any state.
 
 ### Step 2 — Assert predecessor phase (REQ-043)
 
-Shell out to `${CLAUDE_PLUGIN_ROOT}/hooks/lib/state.sh state_assert_phase spec-done`.
-
-If the command exits non-zero it will print:
-
-```
-spear:prove requires phase=spec-done; current phase=<actual>
-```
-
-Stop immediately and surface that message to the user. Do NOT proceed.
+Shell out to `${CLAUDE_PLUGIN_ROOT}/hooks/lib/state.sh state_assert_phase spec-done`. On non-zero exit, surface the printed message and stop — do NOT proceed.
 
 ### Step 3 — Set phase to `prove`
 
