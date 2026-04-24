@@ -98,12 +98,10 @@ run_claude_hook() {
 # reconciliation is skipped: exit 0, state unchanged, no crash.
 @test "reconcile: when no runner available → skip silently" {
   setup_stale_state_fixture
-  # Capture absolute jq path before restricting PATH (path varies by OS)
-  local jq_bin
-  jq_bin=$(command -v jq)
-  # Clear PATH of any gradle — remove fixture bin and restrict to minimum
-  export PATH="/usr/bin:/bin"
-  unset SPEAR_TEST_RUNNER
+  # Point SPEAR_TEST_RUNNER at a nonexistent binary — exercises the
+  # command -v guard in reconcile.sh without relying on PATH manipulation
+  # (PATH tricks are fragile: CI runners may have gradle at /usr/bin/gradle)
+  export SPEAR_TEST_RUNNER="/nonexistent/no-runner-$$"
 
   run_claude_hook
 
@@ -111,11 +109,11 @@ run_claude_hook() {
 
   # State file testStatus must remain "green" (unchanged)
   local status_val
-  status_val=$("$jq_bin" -r '.testStatus' .claude/spear-state.json)
+  status_val=$(jq -r '.testStatus' .claude/spear-state.json)
   [ "$status_val" = "green" ]
 
   # Payload must not contain "state corrected"
   local ctx
-  ctx=$(echo "$output" | "$jq_bin" -r '.hookSpecificOutput.additionalContext')
+  ctx=$(echo "$output" | jq -r '.hookSpecificOutput.additionalContext')
   [[ "$ctx" != *"state corrected"* ]]
 }
