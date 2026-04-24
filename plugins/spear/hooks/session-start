@@ -12,7 +12,31 @@
 
 set -euo pipefail
 
+# ── Never-block guard: trap any error and exit 0 with diagnostic (REQ-085) ─────
+_spear_panic() {
+  local exit_code=$?
+  {
+    echo "SPEAR hook: internal error suppressed (exit ${exit_code} at line ${BASH_LINENO[0]:-?})"
+  } >&2
+  # Emit a minimal valid JSON envelope so consumers never get malformed output
+  if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    printf '{"additional_context":"SPEAR hook: internal error suppressed"}\n'
+  elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"SPEAR hook: internal error suppressed"}}\n'
+  else
+    echo "SPEAR hook: internal error suppressed"
+  fi
+  exit 0
+}
+
+trap '_spear_panic' ERR
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Allow forcing a panic for testing purposes (TEST ONLY)
+if [ "${SPEAR_HOOK_FORCE_FAIL:-0}" = "1" ]; then
+  false  # Trigger the trap via ERR
+fi
 
 # shellcheck source=lib/detect.sh
 source "${SCRIPT_DIR}/lib/detect.sh"
