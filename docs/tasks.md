@@ -122,13 +122,13 @@ Goal: reach the point where the four docs in this very directory can be regenera
   Description: Bats fixtures simulating presence/absence of `context7`, `mgrep`, `semgrep`. Assert probe results appear in payload; assert hook does not re-probe within a single invocation. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-20** — EARS validator
+- [x] **TDD-20** — EARS validator
   References: REQ-072
   Tag: TDD
   Description: Node test feeding malformed and well-formed REQ entries into `tests/state/ears-validator.test.mjs` driving a small `lib/ears.sh` (or `lib/ears.mjs`). Assert each of four canonical patterns accepted; non-matching rejected with file:line. Worker: Haiku.
   Evidence: ` `
 
-- [ ] **TDD-21** — Skill-content lint
+- [x] **TDD-21** — Skill-content lint
   References: REQ-100
   Tag: TDD
   Description: Failing Node test in `tests/skills/lint.test.mjs` with a fixture skill missing `description`. Implement `tests/skills/lint.mjs` walking `plugins/spear/skills/**/SKILL.md`, asserting frontmatter, body length, link integrity. Worker: Sonnet.
