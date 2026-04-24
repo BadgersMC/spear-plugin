@@ -56,6 +56,15 @@ task. The cycle is non-negotiable: never skip or reorder steps.
 CYCLE
 }
 
+# _build_notice_section
+# Emits a reconciliation notice if $SPEAR_RECONCILE_NOTICE is non-empty.
+# FROZEN tier — never truncated (reconciliation notices must reach the user).
+_build_notice_section() {
+  if [ -n "${SPEAR_RECONCILE_NOTICE:-}" ]; then
+    printf '## Notice\n%s\n' "$SPEAR_RECONCILE_NOTICE"
+  fi
+}
+
 # _build_phase_section
 # Emits the current phase line from .claude/spear-state.json (if present).
 # Frozen — never truncated.
@@ -159,13 +168,18 @@ _assemble_with_truncation() {
   local budget="${1:-4096}"
 
   # FROZEN sections (never dropped)
-  local cycle_text phase_text frozen_text
+  local cycle_text phase_text notice_text frozen_text
   cycle_text="$(_build_cycle_section)"
   phase_text="$(_build_phase_section)"
+  notice_text="$(_build_notice_section)"
+
+  # Assemble frozen tier: cycle + phase (if any) + notice (if any)
+  frozen_text="${cycle_text}"
   if [ -n "$phase_text" ]; then
-    frozen_text="${cycle_text}"$'\n\n'"${phase_text}"
-  else
-    frozen_text="${cycle_text}"
+    frozen_text="${frozen_text}"$'\n\n'"${phase_text}"
+  fi
+  if [ -n "$notice_text" ]; then
+    frozen_text="${frozen_text}"$'\n\n'"${notice_text}"
   fi
 
   # TIER 1 — tasks (start with FULL, degrade to SUMMARY)

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Fake gradle — always exits 1 (red) for reconciliation testing (REQ-101)
+echo "FAKE_GRADLE: red"
+exit 1
