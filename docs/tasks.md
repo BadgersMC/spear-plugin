@@ -230,11 +230,11 @@ Goal: reach the point where the four docs in this very directory can be regenera
 
 ### Blockers found during v0.1.0 acceptance (must resolve before release)
 
-- [ ] **TDD-92** — Push plugin code to remote main + human-operator interactive install test
+- [x] **TDD-92** — Push plugin code to remote main + human-operator interactive install test
   References: REQ-120; design §14.1
   Tag: TDD
   Description: Merge or push the `claude/upbeat-bassi-d5ee46` branch content to `origin/main` so `/plugin marketplace add BadgersMC/spear-plugin` resolves the real plugin. Then have a human operator run the full §1 install checklist in TESTING.md interactively and record the result.
-  Evidence: ` `
+  Evidence: `2026-04-24 — pushed to origin/main; plugin installed via /plugin install spear with no errors; hook fired on session start; active worktree line confirmed in injected context. All CI jobs green (skill-lint, state-machine, hook-integration 41/41, polyglot-smoke-windows).`
 
 - [x] **DOC-51** — Trim `arch/SKILL.md` body to ≤ 4096 bytes
   References: REQ-100
