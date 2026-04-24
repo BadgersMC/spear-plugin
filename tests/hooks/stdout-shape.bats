@@ -212,3 +212,24 @@ run_cursor_hook_only() {
   has_key=$(echo "$output" | jq 'has("additional_context")')
   [ "$has_key" = "true" ]
 }
+
+# ── TDD-19 / REQ-021: probe results integrated into payload ─────────────────
+
+@test "payload integration: additionalContext includes Tool probe section (Claude Code)" {
+  SPEAR_PROBE_CONTEXT7=1 SPEAR_PROBE_MGREP=0 SPEAR_PROBE_SEMGREP=0 \
+    CLAUDE_PLUGIN_ROOT=/fake CURSOR_PLUGIN_ROOT= run bash "$HOOK_BIN"
+  [ "$status" -eq 0 ]
+  ctx=$(echo "$output" | jq -r '.hookSpecificOutput.additionalContext')
+  [[ "$ctx" == *"## Tool probe"* ]]
+  [[ "$ctx" == *"context7: available"* ]]
+  [[ "$ctx" == *"mgrep: unavailable"* ]]
+}
+
+@test "payload integration: additional_context includes Tool probe section (Cursor)" {
+  SPEAR_PROBE_CONTEXT7=0 SPEAR_PROBE_MGREP=1 SPEAR_PROBE_SEMGREP=0 \
+    CURSOR_PLUGIN_ROOT=/fake run bash "$HOOK_BIN"
+  [ "$status" -eq 0 ]
+  ctx=$(echo "$output" | jq -r '.additional_context')
+  [[ "$ctx" == *"## Tool probe"* ]]
+  [[ "$ctx" == *"mgrep: available"* ]]
+}

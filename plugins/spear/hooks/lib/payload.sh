@@ -4,10 +4,17 @@
 #
 # Provides:
 #   build_payload
-#     Writes the SPEAR context text to stdout.
+#     Writes the SPEAR context text to stdout, including probe results.
 #     Task 2.5 (TDD-14) will layer truncation and dynamic doc injection on top.
 #
 # REQ-082: Claude Code JSON output shape.
+# REQ-021/022: probe results announced inline (delegated to probe.sh).
+
+# Source probe.sh from same directory if not already loaded.
+if ! declare -F probe_tools >/dev/null 2>&1; then
+  # shellcheck source=./probe.sh
+  source "$(dirname "${BASH_SOURCE[0]}")/probe.sh"
+fi
 
 build_payload() {
   cat <<'PAYLOAD'
@@ -34,4 +41,6 @@ task. The cycle is non-negotiable: never skip or reorder steps.
 - If the spec is wrong, update the spec first.
 - Tasks are self-contained; read only the referenced doc sections.
 PAYLOAD
+  echo
+  probe_tools
 }
