@@ -80,43 +80,43 @@ Goal: reach the point where the four docs in this very directory can be regenera
   Description: Failing tests asserting `state_record_test` writes `testFile`/`testName`/`testStatus`, and `state_clear` returns to a JSON deep-equal of `{"version":1,"phase":"idle"}`. Worker: Haiku.
   Evidence: ` `
 
-- [ ] **TDD-13** — Hook: SPEAR-project detection + no-op outside
+- [x] **TDD-13** — Hook: SPEAR-project detection + no-op outside
   References: REQ-084
   Tag: TDD
   Description: Bats fixture: temp dir without `docs/requirements.md`. Run `session-start`. Assert stdout contains "not a SPEAR project" and exit 0. Add `lib/detect.sh`. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-14** — Hook: payload assembly under ceiling
+- [x] **TDD-14** — Hook: payload assembly under ceiling
   References: REQ-013, REQ-014
   Tag: TDD
   Description: Bats fixture: oversized `tasks.md`. Assert emitted payload ≤ 4096 bytes; truncation order matches REQ-014 (tasks first, then probe history, then deferral list, never cycle rules). Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-15** — Hook: stdout JSON shape (Claude Code branch)
+- [x] **TDD-15** — Hook: stdout JSON shape (Claude Code branch)
   References: REQ-082; impl §3.5
   Tag: TDD
   Description: Bats fixture sets `CLAUDE_PLUGIN_ROOT`, unsets `CURSOR_PLUGIN_ROOT`. Assert stdout is valid JSON with `hookSpecificOutput.additionalContext` non-empty, no `additional_context` key. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-16** — Hook: stdout JSON shape (Cursor branch)
+- [x] **TDD-16** — Hook: stdout JSON shape (Cursor branch)
   References: REQ-083
   Tag: TDD
   Description: Bats fixture sets `CURSOR_PLUGIN_ROOT`. Assert stdout has `additional_context` only. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-17** — Hook: stale-state reconciliation with fake gradle
+- [x] **TDD-17** — Hook: stale-state reconciliation with fake gradle
   References: REQ-049, REQ-101
   Tag: TDD
   Description: Bats fixture `tests/hooks/fixtures/stale-state/` with seeded `spear-state.json` (`testStatus: green`), real JUnit test file, fake `gradle` script on `$PATH` deterministically returning red. Assert reconciliation flips state to `testStatus: red` and the injected payload mentions the correction. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **TDD-18** — Hook: never-block on internal error
+- [x] **TDD-18** — Hook: never-block on internal error
   References: REQ-085
   Tag: TDD
   Description: Inject failure (corrupt `spear-state.json`); assert `session-start` exits 0 and emits diagnostic line. Worker: Haiku.
   Evidence: ` `
 
-- [ ] **TDD-19** — Tool probe + cache
+- [x] **TDD-19** — Tool probe + cache
   References: REQ-021, REQ-022
   Tag: TDD
   Description: Bats fixtures simulating presence/absence of `context7`, `mgrep`, `semgrep`. Assert probe results appear in payload; assert hook does not re-probe within a single invocation. Worker: Sonnet.
