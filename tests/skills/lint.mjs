@@ -65,7 +65,7 @@ function parseFrontmatter(lines) {
     return { ok: false };
   }
 
-  const frontmatterLines = lines.slice(1, closeIdx);
+  const frontmatterLines = lines.slice(1, closeIdx).map(l => l.replace(/\r$/, ''));
   const bodyLines = lines.slice(closeIdx + 1);
 
   return {
