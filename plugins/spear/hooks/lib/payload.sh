@@ -65,6 +65,15 @@ _build_notice_section() {
   fi
 }
 
+# _build_worktree_section
+# Emits current worktree path and branch. Frozen — never truncated.
+# Lets the LLM verify it is operating in the intended worktree.
+_build_worktree_section() {
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+  printf '## Active worktree\n%s (branch: %s)\n' "$PWD" "$branch"
+}
+
 # _build_phase_section
 # Emits the current phase line from .claude/spear-state.json (if present).
 # Frozen — never truncated.
@@ -168,13 +177,14 @@ _assemble_with_truncation() {
   local budget="${1:-4096}"
 
   # FROZEN sections (never dropped)
-  local cycle_text phase_text notice_text frozen_text
+  local cycle_text worktree_text phase_text notice_text frozen_text
   cycle_text="$(_build_cycle_section)"
+  worktree_text="$(_build_worktree_section)"
   phase_text="$(_build_phase_section)"
   notice_text="$(_build_notice_section)"
 
-  # Assemble frozen tier: cycle + phase (if any) + notice (if any)
-  frozen_text="${cycle_text}"
+  # Assemble frozen tier: cycle + worktree + phase (if any) + notice (if any)
+  frozen_text="${cycle_text}"$'\n\n'"${worktree_text}"
   if [ -n "$phase_text" ]; then
     frozen_text="${frozen_text}"$'\n\n'"${phase_text}"
   fi
