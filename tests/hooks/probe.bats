@@ -125,10 +125,14 @@ EOF
   export SPEAR_PROBE_CONTEXT7="1"
   export SPEAR_PROBE_MGREP="1"
   unset SPEAR_PROBE_SEMGREP
+  local saved_path="$PATH"
   export PATH="/dev/null"
 
-  # Direct call (not in subshell) so cache persists
+  # Direct call (not in subshell) so cache persists in this shell
   probe_tools > /dev/null
+
+  # Restore PATH so bats cleanup (rm etc.) can find system tools
+  export PATH="$saved_path"
 
   # Verify cache guard was set
   [[ "${_SPEAR_PROBE_DONE:-}" == "1" ]] || {
