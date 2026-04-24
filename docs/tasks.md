@@ -136,79 +136,79 @@ Goal: reach the point where the four docs in this very directory can be regenera
 
 ### DOC tasks
 
-- [ ] **DOC-30** — Skill body: `using-spear`
+- [x] **DOC-30** — Skill body: `using-spear`
   References: REQ-011, REQ-013, REQ-014, REQ-015, REQ-020, REQ-023, REQ-024
   Tag: DOC
   Description: Author `plugins/spear/skills/using-spear/SKILL.md`. Hard ceiling 4096 bytes. Sections: cycle rules, trigger matrix, principles, dynamic placeholders for probe results / current task / current phase, deferral list. Lint test (TDD-21) must pass against this file. Worker: Opus (judgment-heavy prose).
   Evidence: ` `
 
-- [ ] **DOC-31** — Skill body: `init`
+- [x] **DOC-31** — Skill body: `init`
   References: REQ-070..REQ-075, REQ-065, REQ-066; design §8
   Tag: DOC
   Description: Author `plugins/spear/skills/init/SKILL.md` describing detection, interactive drafting, template emission, Konsist drop, commit. References template files by relative path. Worker: Opus.
   Evidence: ` `
 
-- [ ] **DOC-32** — Skill body: `spec`
+- [x] **DOC-32** — Skill body: `spec`
   References: REQ-030, REQ-072, REQ-073, REQ-074
   Tag: DOC
   Description: Author `plugins/spear/skills/spec/SKILL.md`. Procedure: read requirements.md, validate EARS, assign next REQ-ID monotonically, draft tasks with empty Evidence block, call `state.sh state_set_phase spec-done`. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-33** — Skill body: `prove`
+- [x] **DOC-33** — Skill body: `prove`
   References: REQ-031, REQ-046, REQ-091, REQ-092
   Tag: DOC
   Description: Author `plugins/spear/skills/prove/SKILL.md`. Asserts predecessor phase, runs SPEAR-project detection, writes failing test, runs import-diff vs Evidence, records state. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-34** — Skill body: `engine`
+- [x] **DOC-34** — Skill body: `engine`
   References: REQ-031, REQ-047
   Tag: DOC
   Description: Author `plugins/spear/skills/engine/SKILL.md`. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-35** — Skill body: `arch`
+- [x] **DOC-35** — Skill body: `arch`
   References: REQ-060..REQ-067; design §6
   Tag: DOC
   Description: Author `plugins/spear/skills/arch/SKILL.md`. Procedure: read Layer Dependency Rules section, scan modified-file imports, denylist scan, block on violation. Worker: Opus (high architectural judgment).
   Evidence: ` `
 
-- [ ] **DOC-36** — Skill body: `refine`
+- [x] **DOC-36** — Skill body: `refine`
   References: REQ-048
   Tag: DOC
   Description: Author `plugins/spear/skills/refine/SKILL.md`. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-40** — Template: `tech-stack.md`
+- [x] **DOC-40** — Template: `tech-stack.md`
   References: REQ-071
   Tag: DOC
   Description: Generalised template seeded with detection placeholders. Derived by abstracting this repo's own `docs/tech-stack.md`. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-41** — Template: `requirements.md`
+- [x] **DOC-41** — Template: `requirements.md`
   References: REQ-071, REQ-072
   Tag: DOC
   Description: Empty EARS-skeleton with one example REQ per pattern. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-42** — Template: `implementation.md`
+- [x] **DOC-42** — Template: `implementation.md`
   References: REQ-060, REQ-064, REQ-071
   Tag: DOC
   Description: Includes empty `## Layer Dependency Rules` and `## Forbidden Domain Annotations` (yaml: `forbidden: []`). Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-43** — Template: `tasks.md`
+- [x] **DOC-43** — Template: `tasks.md`
   References: REQ-074
   Tag: DOC
   Description: Empty skeleton with `TDD/DOC/INFRA` tag legend, References + Evidence blocks. Worker: Sonnet.
   Evidence: ` `
 
-- [ ] **DOC-44** — Template: `LayerRulesTest.kt` (Konsist)
+- [x] **DOC-44** — Template: `LayerRulesTest.kt` (Konsist)
   References: REQ-065
   Tag: DOC
   Description: Konsist test asserting `domain/**` packages have no imports outside `domain/**` + stdlib. Parameterised on detected top-level package. Worker: Sonnet (with Konsist API verified via context7 first).
   Evidence: ` `
 
-- [ ] **DOC-50** — README, CONTRIBUTING, TESTING
+- [x] **DOC-50** — README, CONTRIBUTING, TESTING
   References: REQ-103
   Tag: DOC
   Description: Author repo-root README (install flow + 30-second pitch), CONTRIBUTING (dev workflow), TESTING (manual E2E checklist per REQ-103). Worker: Opus.
