@@ -216,16 +216,48 @@ Goal: reach the point where the four docs in this very directory can be regenera
 
 ### Acceptance for v0.1.0
 
-- [ ] **TDD-90** — E2E: install flow on clean cache
+- [x] **TDD-90** — E2E: install flow on clean cache
   References: REQ-120; design §14.1
   Tag: TDD
   Description: Manual `/plugin marketplace add` + `/plugin install` against a scratch `~/.claude/`. Document outcome in `TESTING.md`. Worker: Opus (exercises real Claude Code session).
-  Evidence: ` `
+  Evidence: `2026-04-24 — structural validation PASS (manifests, hooks, file structure). Interactive /plugin commands not testable from agent context. Blockers found: plugin code not on origin/main (TDD-92), 3 skill body overages (DOC-51..53), EARS validator doc bug (DOC-54). See TESTING.md §Release log v0.1.0.`
 
-- [ ] **TDD-91** — E2E: `/spear:init` regenerates bootstrap docs
+- [x] **TDD-91** — E2E: `/spear:init` regenerates bootstrap docs
   References: REQ-121; design §14.2
   Tag: TDD
   Description: Run `/spear:init` against a scratch directory; diff produced docs against this repo's hand-written ones (semantic match — REQ-IDs may differ in count, structure must match). Worker: Opus.
+  Evidence: `2026-04-24 — JVM pass (Kotlin/Gradle, D:/tmp/spear-e2e-init): 5 files committed, __BASE_PACKAGE__ substituted, EARS exit 0. Non-JVM pass (Node, D:/tmp/spear-e2e-init-node): 4 files, Konsist-skip notice emitted. Semantic diff: STRUCTURAL MATCH on all 4 docs.`
+
+### Blockers found during v0.1.0 acceptance (must resolve before release)
+
+- [ ] **TDD-92** — Push plugin code to remote main + human-operator interactive install test
+  References: REQ-120; design §14.1
+  Tag: TDD
+  Description: Merge or push the `claude/upbeat-bassi-d5ee46` branch content to `origin/main` so `/plugin marketplace add BadgersMC/spear-plugin` resolves the real plugin. Then have a human operator run the full §1 install checklist in TESTING.md interactively and record the result.
+  Evidence: ` `
+
+- [ ] **DOC-51** — Trim `arch/SKILL.md` body to ≤ 4096 bytes
+  References: REQ-100
+  Tag: DOC
+  Description: `plugins/spear/skills/arch/SKILL.md` body is 4157 bytes, 61 bytes over the 4096-byte lint ceiling. Trim prose without changing semantics. Confirm `node tests/skills/lint.mjs . → exit 0` after.
+  Evidence: ` `
+
+- [ ] **DOC-52** — Trim `engine/SKILL.md` body to ≤ 4096 bytes
+  References: REQ-100
+  Tag: DOC
+  Description: `plugins/spear/skills/engine/SKILL.md` body is 4144 bytes, 48 bytes over. Trim prose. Confirm lint green.
+  Evidence: ` `
+
+- [ ] **DOC-53** — Trim `prove/SKILL.md` body to ≤ 4096 bytes
+  References: REQ-100
+  Tag: DOC
+  Description: `plugins/spear/skills/prove/SKILL.md` body is 4135 bytes, 39 bytes over. Trim prose. Confirm lint green.
+  Evidence: ` `
+
+- [ ] **DOC-54** — Fix EARS validator usage in `spear:init` SKILL.md
+  References: REQ-070; REQ-072
+  Tag: DOC
+  Description: `plugins/spear/skills/init/SKILL.md` §2 documents the EARS validator as `node plugins/spear/hooks/lib/ears.mjs "<candidate-line>"` (string arg), but `ears.mjs` actually takes a FILE PATH. Update the prose to show the correct usage: write candidate REQ to a temp file, then pass the file path. Confirm the documented invocation works.
   Evidence: ` `
 
 ---
